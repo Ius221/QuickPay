@@ -1,0 +1,13 @@
+package com.example.project.first.QuickPay.dto;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
+public class LoginRequestDto {
+    private String username;
+    private String password;
+}

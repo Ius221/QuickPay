@@ -1,5 +1,7 @@
 package com.example.project.first.QuickPay.controller;
 
+import com.example.project.first.QuickPay.dto.LoginRequestDto;
+import com.example.project.first.QuickPay.dto.LoginResponseDto;
 import com.example.project.first.QuickPay.dto.SignupRequestDto;
 import com.example.project.first.QuickPay.dto.SignupResponseDto;
 import com.example.project.first.QuickPay.security.AuthService;
@@ -17,6 +19,13 @@ public class AuthController {
 
     @Autowired
     private AuthService authService;
+
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequestDto loginRequestDto){
+        LoginResponseDto loginResponseDto = authService.login(loginRequestDto);
+
+        return new ResponseEntity<>(loginResponseDto, HttpStatus.OK);
+    }
 
     @PostMapping("/signup")
     public ResponseEntity<SignupResponseDto> signup(@RequestBody SignupRequestDto signupRequestDto){
