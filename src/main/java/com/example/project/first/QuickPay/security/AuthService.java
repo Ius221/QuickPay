@@ -29,7 +29,6 @@ public class AuthService {
     @Autowired
     private UserRepository userRepository;
 
-    static Long accNo = 1000L;
 
     public SignupResponseDto signup(SignupRequestDto signupRequestDto) {
         User user = userRepository.findByUsername(signupRequestDto.getUsername()).orElse(null);
@@ -38,7 +37,7 @@ public class AuthService {
 
         Wallet wallet = new Wallet();
         wallet.setMoney(500D);
-        wallet.setAccNo(accNo++);
+//        wallet.setAccNo(accNo++);
 
       user = userRepository.save(
               User.builder()
@@ -63,9 +62,7 @@ public class AuthService {
 
         String token = jwtUtil.generateAccessToken(user);
 
-//        System.out.println(user);
-
-        return new LoginResponseDto(user.getUsername(), token);
+        return new LoginResponseDto(user.getUsername(), token, user.getWallet().getAccNo(), user.getWallet().getMoney());
 
     }
 }

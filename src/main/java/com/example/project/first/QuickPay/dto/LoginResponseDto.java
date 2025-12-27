@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 public class LoginResponseDto {
     private String token;
     private String username;
-//    private Long accNo;
-//    private Double money;
+    private Long accNo;
+    private Double money;
 }
