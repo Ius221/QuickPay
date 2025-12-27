@@ -15,13 +15,22 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 public class Wallet {
-    @Id
-    @GeneratedValue(strategy =  GenerationType.IDENTITY)
-    private Long id;
+//    @Id
+//    @GeneratedValue(strategy =  GenerationType.IDENTITY)
+//    private Long id;
 
     public Double  money;
 
-    public Long accNo;
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "acc_no_generator")
+    @SequenceGenerator(
+            name = "acc_no_generator",
+            sequenceName = "wallet_acc_no_seq",
+            initialValue = 1001, // Starts at 1001
+            allocationSize = 1   // Increases by 1 each time
+    )
+    private Long accNo;
+//    public Long accNo;
 
     @OneToOne
     @JsonBackReference
