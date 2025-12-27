@@ -3,10 +3,14 @@ package com.example.project.first.QuickPay.security;
 import com.example.project.first.QuickPay.dto.SignupRequestDto;
 import com.example.project.first.QuickPay.dto.SignupResponseDto;
 import com.example.project.first.QuickPay.entity.User;
+import com.example.project.first.QuickPay.entity.Wallet;
 import com.example.project.first.QuickPay.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.util.UUID;
 
 @Service
 public class AuthService {
@@ -16,20 +20,25 @@ public class AuthService {
     @Autowired
     private UserRepository userRepository;
 
+    static Long accNo = 1000L;
+
     public SignupResponseDto signup(SignupRequestDto signupRequestDto) {
         User user = userRepository.findByUsername(signupRequestDto.getUsername()).orElse(null);
-        System.out.println(user+" + "+ signupRequestDto);
 
         if(user != null) throw new IllegalArgumentException("Username Repeated");
+
+        Wallet wallet = new Wallet();
+        wallet.setMoney(500D);
+        wallet.setAccNo(accNo++);
 
       user = userRepository.save(
               User.builder()
                       .username(signupRequestDto.getUsername())
                       .password(passwordEncoder.encode(signupRequestDto.getPassword()))
+                      .wallet(wallet)
                       .build()
       );
-        System.out.println(user+"<-----");
-    return new SignupResponseDto(user.getUsername(), user.getPassword());
 
+    return new SignupResponseDto(user.getUsername(),wallet.getAccNo(), wallet.getMoney());
     }
 }
