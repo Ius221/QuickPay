@@ -1,5 +1,6 @@
 package com.example.project.first.QuickPay.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
@@ -32,6 +33,7 @@ public class User implements UserDetails {
     private String password;
 
     @OneToOne(cascade = CascadeType.ALL)
+    @JsonManagedReference
     private Wallet wallet;
 
     @Override

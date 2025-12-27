@@ -1,5 +1,6 @@
 package com.example.project.first.QuickPay.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -23,6 +24,7 @@ public class Wallet {
     public Long accNo;
 
     @OneToOne
+    @JsonBackReference
     private User user;
 
 }
