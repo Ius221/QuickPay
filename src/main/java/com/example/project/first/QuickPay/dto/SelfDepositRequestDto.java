@@ -18,4 +18,6 @@ public class SelfDepositRequestDto {
     @NotNull(message = "Amount is required")
     @Positive(message = "Amount must be a positive value")
     private double money;
+
+    private String password;
 }
