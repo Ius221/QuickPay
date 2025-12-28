@@ -35,9 +35,10 @@ public class AuthService {
 
         if(user != null) throw new IllegalArgumentException("Username Repeated");
 
+        validatePassword(signupRequestDto.getPassword());
+
         Wallet wallet = new Wallet();
         wallet.setMoney(500D);
-//        wallet.setAccNo(accNo++);
 
       user = userRepository.save(
               User.builder()
@@ -65,4 +66,23 @@ public class AuthService {
         return new LoginResponseDto(user.getUsername(), token, user.getWallet().getAccNo(), user.getWallet().getMoney());
 
     }
+
+    public void validatePassword(String password) {
+
+        if (password == null)
+            throw new IllegalArgumentException("Password cannot be null");
+
+        if (password.length() < 5)
+            throw new IllegalArgumentException("Password must be at least 5 characters long");
+
+        if (!password.matches(".*[A-Za-z].*"))
+            throw new IllegalArgumentException("Password must contain at least one alphabet");
+
+        if (!password.matches(".*\\d.*"))
+            throw new IllegalArgumentException("Password must contain at least one number");
+
+        if (!password.matches(".*[^A-Za-z0-9].*"))
+            throw new IllegalArgumentException("Password must contain at least one symbol");
+    }
+
 }

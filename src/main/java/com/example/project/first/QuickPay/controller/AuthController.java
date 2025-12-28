@@ -5,6 +5,7 @@ import com.example.project.first.QuickPay.dto.LoginResponseDto;
 import com.example.project.first.QuickPay.dto.SignupRequestDto;
 import com.example.project.first.QuickPay.dto.SignupResponseDto;
 import com.example.project.first.QuickPay.security.AuthService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +29,7 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<SignupResponseDto> signup(@RequestBody SignupRequestDto signupRequestDto){
+    public ResponseEntity<SignupResponseDto> signup(@Valid @RequestBody SignupRequestDto signupRequestDto){
         SignupResponseDto signupResponseDto = authService.signup(signupRequestDto);
 
         return  new ResponseEntity<>(signupResponseDto, HttpStatus.OK);

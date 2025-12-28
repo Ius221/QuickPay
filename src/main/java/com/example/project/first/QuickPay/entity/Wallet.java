@@ -15,9 +15,6 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 public class Wallet {
-//    @Id
-//    @GeneratedValue(strategy =  GenerationType.IDENTITY)
-//    private Long id;
 
     public Double  money;
 
@@ -30,9 +27,8 @@ public class Wallet {
             allocationSize = 1   // Increases by 1 each time
     )
     private Long accNo;
-//    public Long accNo;
 
-    @OneToOne
+    @OneToOne(mappedBy = "wallet")
     @JsonBackReference
     private User user;
 
