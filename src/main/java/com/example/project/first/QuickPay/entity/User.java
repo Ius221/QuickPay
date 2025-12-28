@@ -3,6 +3,8 @@ package com.example.project.first.QuickPay.entity;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -27,9 +29,12 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull
+    @Size(min = 5, message = "Username must contains 3 character long")
     private String username;
 
-//    @Min(5)
+    @NotNull
+//    @Size(min = 5, message = "Password must be 5 digits long")
     private String password;
 
     @OneToOne(cascade = CascadeType.ALL)
