@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.math.BigDecimal;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor
@@ -32,4 +32,6 @@ public class Wallet {
     @JsonBackReference
     private User user;
 
+    @OneToMany(mappedBy = "wallet")
+    private List<Transaction> transaction;
 }
