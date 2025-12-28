@@ -34,9 +34,11 @@ public class Transaction {
     private Long accNo;
 
     @ManyToOne
+    @JoinColumn(name = "User")
     private User user;
 
     @ManyToOne
+    @JoinColumn(name = "Wallet")
     private Wallet wallet;
 
     @CreationTimestamp
