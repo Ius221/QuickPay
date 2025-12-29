@@ -1,14 +1,13 @@
 package com.example.project.first.QuickPay.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.engine.internal.Cascade;
 import org.jspecify.annotations.Nullable;
@@ -21,10 +20,12 @@ import java.util.Collection;
 import java.util.List;
 
 @Entity
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@ToString
 public class User implements UserDetails {
 
     @Id
@@ -53,5 +54,7 @@ public class User implements UserDetails {
     private LocalDateTime createdDate;
 
     @OneToMany(mappedBy = "user")
+    @JsonBackReference
+    @ToString.Exclude
     private List<Transaction> transaction;
 }

@@ -2,10 +2,7 @@ package com.example.project.first.QuickPay.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
@@ -14,6 +11,7 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Setter
+@ToString
 public class Wallet {
 
     public Double  money;
@@ -33,5 +31,7 @@ public class Wallet {
     private User user;
 
     @OneToMany(mappedBy = "wallet")
+    @JsonBackReference
+    @ToString.Exclude
     private List<Transaction> transaction;
 }

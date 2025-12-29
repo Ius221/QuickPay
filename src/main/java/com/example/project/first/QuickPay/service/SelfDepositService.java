@@ -1,6 +1,6 @@
 package com.example.project.first.QuickPay.service;
 
-import com.example.project.first.QuickPay.dto.SelfDepositRequestDto;
+import com.example.project.first.QuickPay.dto.SelfRequestDto;
 import com.example.project.first.QuickPay.dto.SelfResponseDto;
 import com.example.project.first.QuickPay.entity.Status;
 import com.example.project.first.QuickPay.entity.Transaction;
@@ -11,20 +11,20 @@ import com.example.project.first.QuickPay.repository.UserRepository;
 import com.example.project.first.QuickPay.repository.WalletRepository;
 import jakarta.validation.Valid;
 import java.time.LocalDateTime;
-import java.util.Objects;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
-public class SelfDeposit {
+public class SelfDepositService {
 
     @Autowired private WalletRepository walletRepository;
     @Autowired private UserRepository userRepository;
     @Autowired private TransactionRepository transactionRepository;
     @Autowired private PasswordEncoder passwordEncoder;
 
-    public SelfResponseDto depositMoney(SelfDepositRequestDto depositRequestDto, String username) {
+    public SelfResponseDto depositMoney(SelfRequestDto depositRequestDto, String username) {
 
         User currUser = userRepository.findByUsername(username).orElse(null);
 
@@ -33,18 +33,18 @@ public class SelfDeposit {
         return userWalletValidation(currUser, wallet, depositRequestDto, false);
     }
 
-    public SelfResponseDto withdrawFund(@Valid SelfDepositRequestDto selfDepositRequestDto, String username) {
+    public SelfResponseDto withdrawFund(@Valid SelfRequestDto selfRequestDto, String username) {
         User currUser = userRepository.findByUsername(username).orElse(null);
 
-        Wallet wallet = walletRepository.findById(selfDepositRequestDto.getAccNo()).orElse(null);
+        Wallet wallet = walletRepository.findById(selfRequestDto.getAccNo()).orElse(null);
 
-        return userWalletValidation(currUser, wallet, selfDepositRequestDto, true);
+        return userWalletValidation(currUser, wallet, selfRequestDto, true);
     }
 
     private SelfResponseDto userWalletValidation(
             User currUser,
             Wallet wallet,
-            SelfDepositRequestDto depositRequestDto,
+            SelfRequestDto depositRequestDto,
             boolean isWithdraw
     ) {
         if (wallet == null || currUser == null)
@@ -65,7 +65,7 @@ public class SelfDeposit {
 
         Transaction transaction = new Transaction();
         transaction.setMoney(depositRequestDto.getMoney());
-        transaction.setMoneyStatus(Status.DEPOSIT);
+        transaction.setMoneyStatus(isWithdraw ? Status.WITHDRAW : Status.DEPOSIT);
         transaction.setUsername(currUser.getUsername());
         transaction.setAccNo(wallet.getAccNo());
         transaction.setWallet(wallet);
