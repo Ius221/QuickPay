@@ -38,9 +38,9 @@ public class RecordService {
                 .map( transaction -> new TransactionResponseDto(
                         transaction.getMoneyStatus().toString(),
                         transaction.getMoney(),
-                        Objects.equals(transaction.getUser().getUsername(), transaction.getUsername()) ? "Self":
-                                transaction.getUser().getUsername(),
-                        transaction.getWallet().getAccNo().toString(),
+//                        Objects.equals(transaction.getUser().getUsername(), transaction.getUsername()) ? "Self":
+                                transaction.getUsername(),
+                        transaction.getAccNo().toString(),
                         transaction.getTransactionTime()
                         ))
                 .toList();
