@@ -1,8 +1,8 @@
 package com.example.project.first.QuickPay.controller;
 
-import com.example.project.first.QuickPay.dto.SelfDepositRequestDto;
+import com.example.project.first.QuickPay.dto.SelfRequestDto;
 import com.example.project.first.QuickPay.dto.SelfResponseDto;
-import com.example.project.first.QuickPay.service.SelfDeposit;
+import com.example.project.first.QuickPay.service.SelfDepositService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,12 +14,12 @@ import org.springframework.web.bind.annotation.*;
 public class SelfTransactionController {
 
     @Autowired
-    private SelfDeposit selfDeposit;
+    private SelfDepositService selfDeposit;
 
     @PostMapping("/deposit")
     public ResponseEntity<SelfResponseDto> depositMoney(
             @RequestParam String username,
-            @Valid @RequestBody SelfDepositRequestDto depositRequestDto
+            @Valid @RequestBody SelfRequestDto depositRequestDto
     ){
 
         SelfResponseDto depositResponseDto = selfDeposit.depositMoney(depositRequestDto, username);
@@ -31,9 +31,9 @@ public class SelfTransactionController {
     @PostMapping("/withdraw")
     public ResponseEntity<SelfResponseDto> withdrawMoney(
             @RequestParam String username,
-            @Valid @RequestBody SelfDepositRequestDto selfDepositRequestDto
+            @Valid @RequestBody SelfRequestDto selfRequestDto
     ){
-        SelfResponseDto selfResponseDto = selfDeposit.withdrawFund(selfDepositRequestDto, username);
+        SelfResponseDto selfResponseDto = selfDeposit.withdrawFund(selfRequestDto, username);
 
         return  new ResponseEntity<>(selfResponseDto, HttpStatus.OK);
     }
