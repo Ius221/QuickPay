@@ -1,5 +1,6 @@
 package com.example.project.first.QuickPay.service;
 
+import com.example.project.first.QuickPay.dto.PasswordRequestDto;
 import com.example.project.first.QuickPay.dto.TransactionResponseDto;
 import com.example.project.first.QuickPay.entity.Transaction;
 import com.example.project.first.QuickPay.entity.User;
@@ -9,6 +10,7 @@ import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,6 +25,8 @@ public class RecordService {
     private UserRepository userRepository;
     @Autowired
     private ModelMapper modelMapper;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public List<TransactionResponseDto> showTransaction(String username) {
 
@@ -46,5 +50,16 @@ public class RecordService {
                 .toList();
 
         return allResponseDtos;
+    }
+
+    public double getCurrentBalance(String username, PasswordRequestDto passwordRequestDto) {
+
+        User currUser = userRepository.findByUsername(username).orElseThrow();
+
+        if(!passwordEncoder.matches(passwordRequestDto.getPassword(),currUser.getPassword()))
+            throw new IllegalArgumentException("Password doesn't Match");
+
+        return currUser.getWallet().getMoney();
+
     }
 }
