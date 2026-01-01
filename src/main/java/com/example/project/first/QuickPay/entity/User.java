@@ -37,7 +37,7 @@ public class User implements UserDetails {
     private String username;
 
     @NotNull
-//    @Size(min = 5, message = "Password must be 5 digits long")
+    @Size(min = 5, message = "Password must be 5 digits long")
     private String password;
 
     @OneToOne(cascade = CascadeType.ALL)

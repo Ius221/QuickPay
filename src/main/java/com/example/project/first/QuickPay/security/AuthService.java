@@ -64,7 +64,7 @@ public class AuthService {
         assert user != null;
         String token = jwtUtil.generateAccessToken(user);
 
-        return new LoginResponseDto(user.getUsername(), token, user.getWallet().getAccNo(), user.getWallet().getMoney());
+        return new LoginResponseDto( token, user.getUsername(),user.getWallet().getAccNo(), user.getWallet().getMoney());
 
     }
 
