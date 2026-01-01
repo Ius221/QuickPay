@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -35,6 +36,9 @@ public class User implements UserDetails {
     @NotNull
     @Size(min = 5, message = "Username must contains 3 character long")
     private String username;
+
+    @Email
+    private String email;
 
     @NotNull
     @Size(min = 5, message = "Password must be 5 digits long")

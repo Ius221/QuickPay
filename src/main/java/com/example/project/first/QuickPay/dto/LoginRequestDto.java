@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Data
 public class LoginRequestDto {
     @NotNull
-    private String username;
+    private String email;
 
     @NotBlank
     @Password(message = "Password is weak")
