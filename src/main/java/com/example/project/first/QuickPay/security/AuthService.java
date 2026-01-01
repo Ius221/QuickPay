@@ -29,11 +29,11 @@ public class AuthService {
     @Autowired
     private UserRepository userRepository;
 
-
     public SignupResponseDto signup(SignupRequestDto signupRequestDto) {
-        User user = userRepository.findByUsername(signupRequestDto.getUsername()).orElse(null);
+//        User user = userRepository.findByUsername(signupRequestDto.getUsername()).orElse(null);
+        User user = userRepository.findByEmail(signupRequestDto.getEmail()).orElse(null);
 
-        if(user != null) throw new IllegalArgumentException("Username Repeated");
+        if(user != null ) throw new IllegalArgumentException(" Email Already Used");
 
         validatePassword(signupRequestDto.getPassword());
 
@@ -44,6 +44,7 @@ public class AuthService {
               User.builder()
                       .username(signupRequestDto.getUsername())
                       .password(passwordEncoder.encode(signupRequestDto.getPassword()))
+                      .email(signupRequestDto.getEmail())
                       .wallet(wallet)
                       .build()
       );
@@ -52,9 +53,12 @@ public class AuthService {
     }
 
     public LoginResponseDto login(LoginRequestDto loginRequestDto) {
+        System.out.println(loginRequestDto);
+
+
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        loginRequestDto.getUsername(),
+                        loginRequestDto.getEmail(),
                         loginRequestDto.getPassword()
                 )
         );
