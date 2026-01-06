@@ -28,12 +28,11 @@ public class RecordController {
 
     }
 
-    @PostMapping("/balance")
+    @GetMapping("/balance")
     public ResponseEntity<Double> showBalance(
-            @RequestParam String username,
-            @RequestBody PasswordRequestDto passwordRequestDto
+            @RequestParam String username
     ){
-        double currBalance = recordService.getCurrentBalance(username, passwordRequestDto);
+        double currBalance = recordService.getCurrentBalance(username);
         return  new ResponseEntity<>(currBalance, HttpStatus.OK);
     }
 
