@@ -52,7 +52,7 @@ public class WebSecurityConfig {
     @Bean
     CorsConfigurationSource corsConfigurationSource(){
         org.springframework.web.cors.CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:5173"));
+        configuration.setAllowedOrigins(List.of("http://localhost:5173","https://quickpay-221.vercel.app"));
         configuration.setAllowedMethods(List.of("GET","POST","PUT","DELETE"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);

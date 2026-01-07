@@ -1,6 +1,8 @@
 package com.example.project.first.QuickPay.controller;
 
+import com.example.project.first.QuickPay.config.AppConstants;
 import com.example.project.first.QuickPay.dto.PasswordRequestDto;
+import com.example.project.first.QuickPay.dto.TransactionResponse;
 import com.example.project.first.QuickPay.dto.TransactionResponseDto;
 import com.example.project.first.QuickPay.entity.Transaction;
 import com.example.project.first.QuickPay.service.RecordService;
@@ -20,18 +22,37 @@ public class RecordController {
     private RecordService recordService;
 
     @GetMapping("/transaction")
-    public ResponseEntity<List<TransactionResponseDto>> showTransaction(@RequestParam String username){
-
-        List<TransactionResponseDto> responseDto = recordService.showTransaction(username);
+    public ResponseEntity<TransactionResponse> showTransaction(
+            @RequestParam String username,
+            @RequestParam(
+                    name = "pageNumber",
+                    defaultValue = AppConstants.PAGE_NUMBER,
+                    required = false
+            ) Integer pageNumber,
+            @RequestParam(
+                    name = "sortBy",
+                    defaultValue = AppConstants.SORT_TRANSACTIONS_BY,
+                    required = false
+            ) String sortPage,
+            @RequestParam(
+                    name = "pageSize",
+                    defaultValue = AppConstants.PAGE_SIZE,
+                    required = false
+            ) Integer pageSize,
+            @RequestParam(
+                    name = "sortOrder",
+                    defaultValue = AppConstants.SORT_DIR,
+                    required = false
+            ) String sortOrder
+    ){
+        TransactionResponse responseDto = recordService.showTransaction(username,pageNumber, sortPage, pageSize, sortOrder);
 
         return new ResponseEntity<>(responseDto, HttpStatus.FOUND);
 
     }
 
     @GetMapping("/balance")
-    public ResponseEntity<Double> showBalance(
-            @RequestParam String username
-    ){
+    public ResponseEntity<Double> showBalance(@RequestParam String username){
         double currBalance = recordService.getCurrentBalance(username);
         return  new ResponseEntity<>(currBalance, HttpStatus.OK);
     }
