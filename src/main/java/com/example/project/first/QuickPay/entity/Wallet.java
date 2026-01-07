@@ -4,8 +4,6 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.List;
-
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
@@ -29,9 +27,4 @@ public class Wallet {
     @OneToOne(mappedBy = "wallet")
     @JsonBackReference
     private User user;
-
-    @OneToMany(mappedBy = "wallet")
-    @JsonBackReference
-    @ToString.Exclude
-    private List<Transaction> transaction;
 }

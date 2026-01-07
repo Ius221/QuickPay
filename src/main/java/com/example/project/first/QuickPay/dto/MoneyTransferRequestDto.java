@@ -13,5 +13,5 @@ public class MoneyTransferRequestDto {
     private String password;
     private double money;
     private long accNo;
-
+    private String email;
 }
