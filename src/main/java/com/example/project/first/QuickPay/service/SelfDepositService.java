@@ -49,59 +49,37 @@ public class SelfDepositService {
         SelfResponseDto response = new  SelfResponseDto(currUser.getUsername(), updatedWallet.getMoney(),
                 updatedWallet.getAccNo(), savedTransaction.getTransactionTime());
 
-
-
       return response;
     }
 
-    public SelfResponseDto withdrawFund(@Valid SelfRequestDto selfRequestDto, String username) {
-        User currUser = userRepository.findByUsername(username).orElse(null);
+    public SelfResponseDto withdrawFund(@Valid SelfRequestDto selfRequestDto) {
+        User currUser = userRepository.findByEmail(selfRequestDto.getEmail()).orElse(null);
+        if(currUser == null) throw  new IllegalArgumentException("User not found with email: "+selfRequestDto.getEmail());
 
-        Wallet wallet = walletRepository.findById(selfRequestDto.getAccNo()).orElse(null);
+        Wallet currWallet = currUser.getWallet();
 
-        return userWalletValidation(currUser, wallet, selfRequestDto, true);
-    }
+        if(currUser.getWallet().getMoney() < selfRequestDto.getMoney()) throw new IllegalArgumentException(
+                "Insufficient Balance");
 
-    private SelfResponseDto userWalletValidation(
-            User currUser,
-            Wallet wallet,
-            SelfRequestDto depositRequestDto,
-            boolean isWithdraw
-    ) {
-        if (wallet == null || currUser == null)
-            throw new IllegalArgumentException("Invalid Credentials");
+        currWallet.setMoney(currWallet.getMoney() - selfRequestDto.getMoney());
 
-        if (wallet.getUser().getUsername() != currUser.getUsername())
-            throw new IllegalArgumentException("Username not Match with account Number");
-
-        if (isWithdraw) {
-            boolean passMatch = passwordEncoder.matches(
-                    depositRequestDto.getPassword(), currUser.getPassword());
-            if (!passMatch)
-                throw new IllegalArgumentException("Password didn't Match");
-
-            if (wallet.getMoney() < depositRequestDto.getMoney())
-                throw new IllegalArgumentException("Insufficient Balance");
-        }
+        Wallet updatedWallet = walletRepository.save(currWallet);
 
         Transaction transaction = new Transaction();
-        transaction.setMoney(depositRequestDto.getMoney());
-        transaction.setMoneyStatus(isWithdraw ? Status.WITHDRAW : Status.DEPOSIT);
-        transaction.setUsername(currUser.getUsername());
-        transaction.setAccNo(wallet.getAccNo());
-        transaction.setWallet(wallet);
-        transaction.setUser(currUser);
+        transaction.setMoney(selfRequestDto.getMoney());
+        transaction.setMoneyStatus(Status.WITHDRAW);
+        transaction.setSenderName("Self");
+        transaction.setReceiverName("Self");
+        transaction.setSenderAccNo(currWallet.getAccNo());
+        transaction.setReceiverAccNo(currWallet.getAccNo());
+        transaction.setUser( currUser);
 
-        transactionRepository.save(transaction);
+        Transaction savedTransaction = transactionRepository.save(transaction);
 
-        wallet
-                .setMoney(isWithdraw
-                ? wallet.getMoney() - depositRequestDto.getMoney()
-                : wallet.getMoney() + depositRequestDto.getMoney());
+        SelfResponseDto response = new  SelfResponseDto(currUser.getUsername(), updatedWallet.getMoney(),
+                updatedWallet.getAccNo(), savedTransaction.getTransactionTime());
 
-        wallet = walletRepository.save(wallet);
-
-        return new SelfResponseDto(wallet.getUser().getUsername(),
-                wallet.getMoney(), wallet.getAccNo(), LocalDateTime.now());
+        return response;
     }
+
 }

@@ -31,10 +31,9 @@ public class TransactionController {
 
     @PostMapping("/self/withdraw")
     public ResponseEntity<SelfResponseDto> withdrawMoney(
-            @RequestParam String username,
             @Valid @RequestBody SelfRequestDto selfRequestDto
     ){
-        SelfResponseDto selfResponseDto = selfDeposit.withdrawFund(selfRequestDto, username);
+        SelfResponseDto selfResponseDto = selfDeposit.withdrawFund(selfRequestDto);
 
         return  new ResponseEntity<>(selfResponseDto, HttpStatus.OK);
     }
