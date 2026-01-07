@@ -1,6 +1,6 @@
 package com.example.project.first.QuickPay.security;
 
-import com.example.project.first.QuickPay.config.CsrfCookieFilter;
+//import com.example.project.first.QuickPay.config.CsrfCookieFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -42,7 +42,7 @@ public class WebSecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(sessionManagement -> sessionManagement
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class)
+//                .addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
         ;
 
