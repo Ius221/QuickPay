@@ -23,7 +23,7 @@ public class RecordController {
 
     @GetMapping("/transaction")
     public ResponseEntity<TransactionResponse> showTransaction(
-            @RequestParam String username,
+            @RequestParam Long accNo,
             @RequestParam(
                     name = "pageNumber",
                     defaultValue = AppConstants.PAGE_NUMBER,
@@ -45,7 +45,7 @@ public class RecordController {
                     required = false
             ) String sortOrder
     ){
-        TransactionResponse responseDto = recordService.showTransaction(username,pageNumber, sortPage, pageSize, sortOrder);
+        TransactionResponse responseDto = recordService.showTransaction(accNo,pageNumber, sortPage, pageSize, sortOrder);
 
         return new ResponseEntity<>(responseDto, HttpStatus.FOUND);
     }

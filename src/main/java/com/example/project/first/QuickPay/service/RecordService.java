@@ -4,8 +4,10 @@ import com.example.project.first.QuickPay.dto.TransactionResponse;
 import com.example.project.first.QuickPay.dto.TransactionResponseDto;
 import com.example.project.first.QuickPay.entity.Transaction;
 import com.example.project.first.QuickPay.entity.User;
+import com.example.project.first.QuickPay.entity.Wallet;
 import com.example.project.first.QuickPay.repository.TransactionRepository;
 import com.example.project.first.QuickPay.repository.UserRepository;
+import com.example.project.first.QuickPay.repository.WalletRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -24,17 +26,19 @@ public class RecordService {
     @Autowired
     private UserRepository userRepository;
     @Autowired
+    private WalletRepository walletRepository;
+    @Autowired
     private ModelMapper modelMapper;
 
+
     public TransactionResponse showTransaction(
-            String username,
+            Long accNo,
             Integer pageNumber,
             String sortPage,
             Integer pageSize,
             String sortOrder) {
 
-        User user = userRepository.findByUsername(username).orElseThrow();
-
+        Wallet currWallet = walletRepository.findById(accNo).orElseThrow();
 
         Sort sortByAndOrder =
                 sortOrder.equalsIgnoreCase("asc")?
@@ -42,35 +46,16 @@ public class RecordService {
                         Sort.by(sortPage).descending();
 
         Pageable pageDetails = PageRequest.of(pageNumber, pageSize, sortByAndOrder);
-        Page<Transaction> transactionPage = transactionRepository.findAll(pageDetails);
+        Page<Transaction> transactionPage = transactionRepository.findByUser(currWallet.getUser(),pageDetails);
 
         List<Transaction> allTransaction = transactionPage.getContent();
         if(allTransaction.isEmpty()) throw  new IllegalArgumentException("No Transaction Found");
-
-//        List<Transaction> allTransactions = transactionRepository.findByUserId(user.getId());
-//
-//        if (allTransactions.isEmpty())
-//            throw new IllegalArgumentException("No transactions found for user: " + username);
-//
-//        List<TransactionResponseDto> allResponseDtos = allTransactions
-//                .stream()
-//                .map( transaction -> new TransactionResponseDto(
-//                        transaction.getMoneyStatus().toString(),
-//                        transaction.getMoney(),
-////                        Objects.equals(transaction.getUser().getUsername(), transaction.getUsername()) ? "Self":
-//                                transaction.getUsername(),
-//                        transaction.getAccNo().toString(),
-//                        transaction.getTransactionTime()
-//                        ))
-//                .toList();
-
 
         List<TransactionResponseDto> transactionResponseDtos = allTransaction
                 .stream()
                 .map( transaction -> new TransactionResponseDto(
                         transaction.getMoneyStatus().toString(),
                         transaction.getMoney(),
-//                        Objects.equals(transaction.getUser().getUsername(), transaction.getUsername()) ? "Self":
                                 transaction.getSenderName(),
                         transaction.getSenderAccNo().toString(),
                         transaction.getTransactionTime()

@@ -31,11 +31,11 @@ public class Transaction {
     private Status moneyStatus;
 
     @NotNull
-    @Column(name = "From")
+    @Column(name = "FromUser")
     private String senderName;
 
     @NotNull
-    @Column(name = "To")
+    @Column(name = "ToUser")
     private String receiverName;
 
     @NotNull
