@@ -23,29 +23,26 @@ public class TransactionController {
 
     @PostMapping("/self/deposit")
     public ResponseEntity<SelfResponseDto> depositMoney(
-            @RequestParam String username,
             @Valid @RequestBody SelfRequestDto depositRequestDto
     ){
-        SelfResponseDto depositResponseDto = selfDeposit.depositMoney(depositRequestDto, username);
+        SelfResponseDto depositResponseDto = selfDeposit.depositMoney(depositRequestDto);
         return new ResponseEntity<>(depositResponseDto, HttpStatus.OK);
     }
 
     @PostMapping("/self/withdraw")
     public ResponseEntity<SelfResponseDto> withdrawMoney(
-            @RequestParam String username,
             @Valid @RequestBody SelfRequestDto selfRequestDto
     ){
-        SelfResponseDto selfResponseDto = selfDeposit.withdrawFund(selfRequestDto, username);
+        SelfResponseDto selfResponseDto = selfDeposit.withdrawFund(selfRequestDto);
 
         return  new ResponseEntity<>(selfResponseDto, HttpStatus.OK);
     }
 
     @PostMapping("/other")
     public ResponseEntity<MoneyTransferResponseDto> transferMoney(
-            @RequestParam String username,
             @RequestBody MoneyTransferRequestDto moneyTransferRequestDto
             ){
-        MoneyTransferResponseDto moneyTransferResponseDto =  moneyTransferService.transferMoney(username,
+        MoneyTransferResponseDto moneyTransferResponseDto =  moneyTransferService.transferMoney(
                 moneyTransferRequestDto);
         return new ResponseEntity<>(moneyTransferResponseDto, HttpStatus.OK);
     }

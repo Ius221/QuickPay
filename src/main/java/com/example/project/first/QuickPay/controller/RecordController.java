@@ -48,7 +48,6 @@ public class RecordController {
         TransactionResponse responseDto = recordService.showTransaction(username,pageNumber, sortPage, pageSize, sortOrder);
 
         return new ResponseEntity<>(responseDto, HttpStatus.FOUND);
-
     }
 
     @GetMapping("/balance")

@@ -1,6 +1,5 @@
 package com.example.project.first.QuickPay.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -24,16 +23,26 @@ public class Transaction {
 
     @NotNull(message = "Amount is required")
     @Positive(message = "Amount must be a positive value")
+    @Column(name = "amount")
     private Double money;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "status")
     private Status moneyStatus;
 
     @NotNull
-    private String username;
+    @Column(name = "From")
+    private String senderName;
 
     @NotNull
-    private Long accNo;
+    @Column(name = "To")
+    private String receiverName;
+
+    @NotNull
+    private Long receiverAccNo;
+
+    @NotNull
+    private Long senderAccNo;
 
     @ManyToOne
     @JoinColumn(name = "User")
@@ -41,13 +50,7 @@ public class Transaction {
     @ToString.Exclude
     private User user;
 
-    @ManyToOne
-    @JoinColumn(name = "Wallet")
-    @JsonManagedReference
-    @ToString.Exclude
-    private Wallet wallet;
-
     @CreationTimestamp
-    @Column(updatable = false)
+    @Column(updatable = false,name = "Time")
     private LocalDateTime transactionTime;
 }

@@ -67,7 +67,14 @@ public class RecordService {
 
         List<TransactionResponseDto> transactionResponseDtos = allTransaction
                 .stream()
-                .map(e-> modelMapper.map(e, TransactionResponseDto.class))
+                .map( transaction -> new TransactionResponseDto(
+                        transaction.getMoneyStatus().toString(),
+                        transaction.getMoney(),
+//                        Objects.equals(transaction.getUser().getUsername(), transaction.getUsername()) ? "Self":
+                                transaction.getSenderName(),
+                        transaction.getSenderAccNo().toString(),
+                        transaction.getTransactionTime()
+                        ))
                 .toList();
 
         TransactionResponse response = new TransactionResponse();
