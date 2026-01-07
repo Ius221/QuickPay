@@ -29,10 +29,15 @@ public class Transaction {
     @Enumerated(EnumType.STRING)
     private Status moneyStatus;
 
-    @NotNull
+    private String senderName;
+    private String receiverName;
+    private Long receiverAccNo;
+    private Long senderAccNo;
+
+//    @NotNull
     private String username;
 
-    @NotNull
+//    @NotNull
     private Long accNo;
 
     @ManyToOne

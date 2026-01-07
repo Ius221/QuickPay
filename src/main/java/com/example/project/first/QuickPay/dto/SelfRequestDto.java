@@ -19,4 +19,5 @@ public class SelfRequestDto {
     private double money;
 
     private String password;
+    private String email;
 }

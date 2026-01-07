@@ -23,10 +23,9 @@ public class TransactionController {
 
     @PostMapping("/self/deposit")
     public ResponseEntity<SelfResponseDto> depositMoney(
-            @RequestParam String username,
             @Valid @RequestBody SelfRequestDto depositRequestDto
     ){
-        SelfResponseDto depositResponseDto = selfDeposit.depositMoney(depositRequestDto, username);
+        SelfResponseDto depositResponseDto = selfDeposit.depositMoney(depositRequestDto);
         return new ResponseEntity<>(depositResponseDto, HttpStatus.OK);
     }
 

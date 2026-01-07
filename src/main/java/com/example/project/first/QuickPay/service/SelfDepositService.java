@@ -24,13 +24,34 @@ public class SelfDepositService {
     @Autowired private TransactionRepository transactionRepository;
     @Autowired private PasswordEncoder passwordEncoder;
 
-    public SelfResponseDto depositMoney(SelfRequestDto depositRequestDto, String username) {
+    public SelfResponseDto depositMoney(SelfRequestDto depositRequestDto) {
 
-        User currUser = userRepository.findByUsername(username).orElse(null);
+        User currUser = userRepository.findByEmail(depositRequestDto.getEmail()).orElse(null);
+        if(currUser == null) throw  new IllegalArgumentException("User not found with email: "+depositRequestDto.getEmail());
 
-        Wallet wallet =walletRepository.findById(depositRequestDto.getAccNo()).orElse(null);
+        Wallet currWallet = currUser.getWallet();
 
-        return userWalletValidation(currUser, wallet, depositRequestDto, false);
+        currWallet.setMoney(currWallet.getMoney() + depositRequestDto.getMoney());
+
+        Wallet updatedWallet = walletRepository.save(currWallet);
+
+        Transaction transaction = new Transaction();
+        transaction.setMoney(depositRequestDto.getMoney());
+        transaction.setMoneyStatus(Status.DEPOSIT);
+        transaction.setSenderName("Self");
+        transaction.setReceiverName("Self");
+        transaction.setSenderAccNo(currWallet.getAccNo());
+        transaction.setReceiverAccNo(currWallet.getAccNo());
+        transaction.setUser( currUser);
+
+        Transaction savedTransaction = transactionRepository.save(transaction);
+
+        SelfResponseDto response = new  SelfResponseDto(currUser.getUsername(), updatedWallet.getMoney(),
+                updatedWallet.getAccNo(), savedTransaction.getTransactionTime());
+
+
+
+      return response;
     }
 
     public SelfResponseDto withdrawFund(@Valid SelfRequestDto selfRequestDto, String username) {
