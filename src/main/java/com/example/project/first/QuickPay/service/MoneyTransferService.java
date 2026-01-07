@@ -29,60 +29,48 @@ public class MoneyTransferService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public MoneyTransferResponseDto transferMoney(String username, MoneyTransferRequestDto moneyTransferRequestDto){
+    public MoneyTransferResponseDto transferMoney( MoneyTransferRequestDto moneyTransferRequestDto){
 
-        User currUser = userRepository.findByUsername(username).orElseThrow();
+    User currUser = userRepository.findByEmail(moneyTransferRequestDto.getEmail()).orElse(null);
+    if(currUser == null) throw new IllegalArgumentException("User not found");
 
-        Wallet receiverWallet = walletRepository.findById(moneyTransferRequestDto.getAccNo()).orElse(null);
+    Wallet otherWallet = walletRepository.findById(moneyTransferRequestDto.getAccNo()).orElse(null);
+    if(otherWallet == null) throw new IllegalArgumentException("Account doesn't exists");
 
-        Wallet senderWallet = walletRepository.findById(currUser.getWallet().getAccNo()).orElse(null);
+    Wallet currWallet = currUser.getWallet();
+    if(moneyTransferRequestDto.getMoney() > currWallet.getMoney()) throw new IllegalArgumentException("Insufficient " +
+            "Balance");
 
-        if(!passwordEncoder.matches(moneyTransferRequestDto.getPassword(),currUser.getPassword()))
-            throw new IllegalArgumentException("Password doesn't match");
+    if(currWallet.getAccNo() == moneyTransferRequestDto.getAccNo()) throw  new IllegalArgumentException("Can't " +
+            "perform this operation on same account");
 
-        if(currUser.getWallet().getMoney() < moneyTransferRequestDto.getMoney())
-            throw new IllegalArgumentException(
-                "Insufficient Balance");
 
-        if(currUser.getWallet().getAccNo() == moneyTransferRequestDto.getAccNo())
-            throw new IllegalArgumentException("Check Account Number");
+    currWallet.setMoney(currWallet.getMoney() - moneyTransferRequestDto.getMoney());
+    otherWallet.setMoney(otherWallet.getMoney() + moneyTransferRequestDto.getMoney());
 
-        if(receiverWallet == null || senderWallet == null)
-            throw new IllegalArgumentException("Account number is not " +
-                "Correct");
+    Transaction senderTransaction = new Transaction();
+    senderTransaction.setMoney(moneyTransferRequestDto.getMoney());
+    senderTransaction.setMoneyStatus(Status.SEND);
+    senderTransaction.setSenderName(currUser.getUsername());
+    senderTransaction.setReceiverName(otherWallet.getUser().getUsername());
+    senderTransaction.setReceiverAccNo(otherWallet.getAccNo());
+    senderTransaction.setSenderAccNo(currWallet.getAccNo());
+    senderTransaction.setUser(currUser);
 
-        double currUserMoney = currUser.getWallet().getMoney() - moneyTransferRequestDto.getMoney();
-        receiverWallet.setMoney(receiverWallet.getMoney() + moneyTransferRequestDto.getMoney());
-        senderWallet.setMoney(currUserMoney);
+    Transaction receiverTransaction = new Transaction();
+    receiverTransaction.setMoney(moneyTransferRequestDto.getMoney());
+    receiverTransaction.setMoneyStatus(Status.RECEIVE);
+    receiverTransaction.setSenderName(currUser.getUsername());
+    receiverTransaction.setReceiverName(otherWallet.getUser().getUsername());
+    receiverTransaction.setReceiverAccNo(otherWallet.getAccNo());
+    receiverTransaction.setSenderAccNo(currWallet.getAccNo());
+    receiverTransaction.setUser(otherWallet.getUser());
 
-        walletRepository.save(receiverWallet);
-        walletRepository.save(senderWallet);
+    otherWallet = walletRepository.save(otherWallet);
+    currWallet = walletRepository.save(currWallet);
+    transactionRepository.save(senderTransaction);
+    transactionRepository.save(receiverTransaction);
 
-        Transaction sendMoney = new Transaction();
-        sendMoney.setMoney(moneyTransferRequestDto.getMoney());
-        sendMoney.setMoneyStatus(Status.SEND);
-        sendMoney.setUsername(receiverWallet.getUser().getUsername());
-        sendMoney.setAccNo(receiverWallet.getAccNo());
-        sendMoney.setUser(currUser);
-        sendMoney.setWallet(currUser.getWallet());
-
-        transactionRepository.save(sendMoney);
-
-        Transaction receiveMoney = new Transaction();
-        receiveMoney.setMoney(moneyTransferRequestDto.getMoney());
-        receiveMoney.setMoneyStatus(Status.RECEIVE);
-        receiveMoney.setUsername(senderWallet.getUser().getUsername());
-        receiveMoney.setAccNo(senderWallet.getAccNo());
-        receiveMoney.setUser(receiverWallet.getUser());
-        receiveMoney.setWallet(receiverWallet);
-
-        transactionRepository.save(receiveMoney);
-
-        MoneyTransferResponseDto moneyTransferResponseDto = new MoneyTransferResponseDto();
-        moneyTransferResponseDto.setCurrBalance(currUserMoney);
-        moneyTransferResponseDto.setStatus("SUCCESS");
-
-        return moneyTransferResponseDto;
-
+    return new MoneyTransferResponseDto(currWallet.getMoney(), "Success");
     }
 }

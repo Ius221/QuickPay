@@ -40,10 +40,9 @@ public class TransactionController {
 
     @PostMapping("/other")
     public ResponseEntity<MoneyTransferResponseDto> transferMoney(
-            @RequestParam String username,
             @RequestBody MoneyTransferRequestDto moneyTransferRequestDto
             ){
-        MoneyTransferResponseDto moneyTransferResponseDto =  moneyTransferService.transferMoney(username,
+        MoneyTransferResponseDto moneyTransferResponseDto =  moneyTransferService.transferMoney(
                 moneyTransferRequestDto);
         return new ResponseEntity<>(moneyTransferResponseDto, HttpStatus.OK);
     }

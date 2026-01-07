@@ -36,8 +36,8 @@ public class RecordService {
                         transaction.getMoneyStatus().toString(),
                         transaction.getMoney(),
 //                        Objects.equals(transaction.getUser().getUsername(), transaction.getUsername()) ? "Self":
-                                transaction.getUsername(),
-                        transaction.getAccNo().toString(),
+                                transaction.getSenderName(),
+                        transaction.getSenderAccNo().toString(),
                         transaction.getTransactionTime()
                         ))
                 .toList();

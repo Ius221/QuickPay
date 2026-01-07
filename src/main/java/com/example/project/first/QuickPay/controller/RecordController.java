@@ -21,11 +21,8 @@ public class RecordController {
 
     @GetMapping("/transaction")
     public ResponseEntity<List<TransactionResponseDto>> showTransaction(@RequestParam String username){
-
         List<TransactionResponseDto> responseDto = recordService.showTransaction(username);
-
         return new ResponseEntity<>(responseDto, HttpStatus.FOUND);
-
     }
 
     @GetMapping("/balance")
