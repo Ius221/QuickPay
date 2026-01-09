@@ -12,4 +12,5 @@ public class LoginResponseDto {
     private String username;
     private Long accNo;
     private Double money;
+    private String email;
 }

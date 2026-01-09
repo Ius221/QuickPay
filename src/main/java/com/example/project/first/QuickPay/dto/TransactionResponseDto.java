@@ -13,5 +13,7 @@ public class TransactionResponseDto {
     private Double money;
     private String senderName;
     private String senderAccNo;
+    private String receiverName;
+    private String receiverAccNo;
     private LocalDateTime time;
 }

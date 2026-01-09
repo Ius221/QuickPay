@@ -58,6 +58,8 @@ public class RecordService {
                         transaction.getMoney(),
                                 transaction.getSenderName(),
                         transaction.getSenderAccNo().toString(),
+                        transaction.getReceiverName(),
+                        transaction.getReceiverAccNo().toString(),
                         transaction.getTransactionTime()
                         ))
                 .toList();
@@ -73,11 +75,10 @@ public class RecordService {
         return response;
     }
 
-    public double getCurrentBalance(String username) {
+    public double getCurrentBalance(Long accNo) {
 
-        User currUser = userRepository.findByUsername(username).orElseThrow();
-
-        return currUser.getWallet().getMoney();
+       Wallet wallet = walletRepository.findById(accNo).orElseThrow();
+        return wallet.getMoney();
 
     }
 }

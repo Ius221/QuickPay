@@ -51,8 +51,8 @@ public class RecordController {
     }
 
     @GetMapping("/balance")
-    public ResponseEntity<Double> showBalance(@RequestParam String username){
-        double currBalance = recordService.getCurrentBalance(username);
+    public ResponseEntity<Double> showBalance(@RequestParam Long accNo){
+        double currBalance = recordService.getCurrentBalance(accNo);
         return  new ResponseEntity<>(currBalance, HttpStatus.OK);
     }
 
