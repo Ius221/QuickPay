@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 
 @AllArgsConstructor
@@ -14,6 +15,6 @@ public class SelfResponseDto {
     private String username;
     private double money;
     private Long accNo;
-    private LocalDateTime localDateTime;
+    private Instant localDateTime;
 
 }

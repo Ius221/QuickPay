@@ -2,6 +2,7 @@ package com.example.project.first.QuickPay.dto;
 
 import lombok.*;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 
 @Getter
@@ -15,5 +16,5 @@ public class TransactionResponseDto {
     private String senderAccNo;
     private String receiverName;
     private String receiverAccNo;
-    private LocalDateTime time;
+    private Instant time;
 }

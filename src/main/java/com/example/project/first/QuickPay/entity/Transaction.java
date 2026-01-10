@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Positive;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 
 @Entity
@@ -50,7 +51,7 @@ public class Transaction {
     @ToString.Exclude
     private User user;
 
-    @CreationTimestamp
+//    @CreationTimestamp
     @Column(updatable = false,name = "Time")
-    private LocalDateTime transactionTime;
+    private Instant transactionTime= Instant.now();
 }
